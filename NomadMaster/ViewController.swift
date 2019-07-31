@@ -13,9 +13,9 @@ import FloatingPanel
 class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
 
     var floatingPanel: FloatingPanelController!
-    var resultsVC: ResultsViewController!
     var locationManager = CLLocationManager()
-    
+    var resultsVC: ResultsViewController!
+
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
@@ -23,10 +23,8 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         
         locationManager.delegate = self
         showFloatingPanel()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
         centerOnUserLocation()
+
     }
 
     func showFloatingPanel() {
@@ -38,6 +36,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         floatingPanel.set(contentViewController: resultsVC)
         floatingPanel.track(scrollView: resultsVC?.tableView)
         floatingPanel.addPanel(toParent: self)
+    
         view.addSubview(floatingPanel.view)
     }
     
