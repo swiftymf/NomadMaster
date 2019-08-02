@@ -86,11 +86,6 @@
                                                 </tableViewCell>
                                             </prototypes>
                                         </tableView>
-                                        <searchBar contentMode="redraw" fixedFrame="YES" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="Jo1-IZ-R4R">
-                                            <rect key="frame" x="0.0" y="12" width="414" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </searchBar>
                                     </subviews>
                                 </view>
                                 <blurEffect style="light"/>
@@ -100,7 +95,6 @@
                         <viewLayoutGuide key="safeArea" id="Zqs-ch-FL8"/>
                     </view>
                     <connections>
-                        <outlet property="searchBar" destination="Jo1-IZ-R4R" id="KhX-z2-fnx"/>
                         <outlet property="tableView" destination="U9N-08-cJc" id="bdh-yI-04T"/>
                         <outlet property="visualEffectView" destination="GP6-6B-mah" id="kes-P7-UA2"/>
                     </connections>
@@ -108,6 +102,65 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="seM-HD-vzr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2731.8840579710145" y="125.89285714285714"/>
+        </scene>
+        <!--Location Details View Controller-->
+        <scene sceneID="Ncf-qp-r96">
+            <objects>
+                <viewController storyboardIdentifier="LocationDetailsViewController" id="NMf-cz-KGG" customClass="LocationDetailsViewController" customModule="NomadMaster" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VjL-2f-rzv">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="8ye-xV-wqm">
+                                <rect key="frame" x="36" y="80" width="342" height="132"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Business Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0rx-fD-6nl">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="arB-Bg-58l"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VvR-a8-xNU">
+                                        <rect key="frame" x="0.0" y="48" width="342" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="jlf-PV-oE4"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v2e-ar-wB2">
+                                        <rect key="frame" x="0.0" y="96" width="342" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="A08-PT-pJH"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="p3q-tr-VW3" firstAttribute="trailing" secondItem="8ye-xV-wqm" secondAttribute="trailing" constant="36" id="JP6-V3-T0q"/>
+                            <constraint firstItem="8ye-xV-wqm" firstAttribute="top" secondItem="p3q-tr-VW3" secondAttribute="top" constant="36" id="JRZ-wx-VJb"/>
+                            <constraint firstItem="8ye-xV-wqm" firstAttribute="leading" secondItem="p3q-tr-VW3" secondAttribute="leading" constant="36" id="hxJ-0i-mcb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="p3q-tr-VW3"/>
+                    </view>
+                    <connections>
+                        <outlet property="addressLabel" destination="v2e-ar-wB2" id="7Tc-im-Zv0"/>
+                        <outlet property="nameLabel" destination="0rx-fD-6nl" id="3Zf-WZ-GTJ"/>
+                        <outlet property="phoneNumberLabel" destination="VvR-a8-xNU" id="Wg3-Rt-OLb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7ox-N4-iZT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3463.7681159420295" y="124.55357142857142"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ZIY-ah-FxL">

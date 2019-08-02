@@ -22,6 +22,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         super.viewDidLoad()
         
         locationManager.delegate = self
+        
         showFloatingPanel()
         centerOnUserLocation()
 
@@ -32,11 +33,11 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         floatingPanel.delegate = self
         
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
+        resultsVC.mapView = mapView
         
         floatingPanel.set(contentViewController: resultsVC)
         floatingPanel.track(scrollView: resultsVC?.tableView)
         floatingPanel.addPanel(toParent: self)
-    
         view.addSubview(floatingPanel.view)
     }
     

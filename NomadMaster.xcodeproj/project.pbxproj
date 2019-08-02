@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		2A8EC94E22F1FE1100238A8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A8EC94D22F1FE1100238A8D /* Assets.xcassets */; };
 		2A8EC95122F1FE1100238A8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A8EC94F22F1FE1100238A8D /* LaunchScreen.storyboard */; };
 		2A8EC95922F1FFCD00238A8D /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8EC95822F1FFCD00238A8D /* ResultsViewController.swift */; };
+		2AAD9CC922F497AD00A6C24E /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAD9CC822F497AD00A6C24E /* LocationDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		2A8EC95022F1FE1100238A8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2A8EC95222F1FE1100238A8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A8EC95822F1FFCD00238A8D /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
+		2AAD9CC822F497AD00A6C24E /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationDetailsViewController.swift; path = "../../../../../System/Volumes/Data/Users/markith/Current Projects/NomadMaster/NomadMaster/LocationDetailsViewController.swift"; sourceTree = "<group>"; };
 		9335B9F24C0BDE60A89E37D4 /* Pods-NomadMaster.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NomadMaster.release.xcconfig"; path = "Target Support Files/Pods-NomadMaster/Pods-NomadMaster.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,7 +50,6 @@
 				1FB512426EC0BFD546D5EBAF /* Pods-NomadMaster.debug.xcconfig */,
 				9335B9F24C0BDE60A89E37D4 /* Pods-NomadMaster.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -76,6 +77,7 @@
 				2A8EC94622F1FE0F00238A8D /* AppDelegate.swift */,
 				2A8EC94822F1FE0F00238A8D /* ViewController.swift */,
 				2A8EC95822F1FFCD00238A8D /* ResultsViewController.swift */,
+				2AAD9CC822F497AD00A6C24E /* LocationDetailsViewController.swift */,
 				2A8EC94A22F1FE0F00238A8D /* Main.storyboard */,
 				2A8EC94D22F1FE1100238A8D /* Assets.xcassets */,
 				2A8EC94F22F1FE1100238A8D /* LaunchScreen.storyboard */,
@@ -207,6 +209,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AAD9CC922F497AD00A6C24E /* LocationDetailsViewController.swift in Sources */,
 				2A8EC94922F1FE0F00238A8D /* ViewController.swift in Sources */,
 				2A8EC94722F1FE0F00238A8D /* AppDelegate.swift in Sources */,
 				2A8EC95922F1FFCD00238A8D /* ResultsViewController.swift in Sources */,
