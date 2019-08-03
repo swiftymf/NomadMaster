@@ -78,6 +78,9 @@ extension ResultsViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("cell at \(indexPath.row) tapped")
         
+        if fpc.isViewLoaded {
+            fpc.dismiss(animated: true, completion: nil)
+        }
         // show new Floating Panel with details of the location
         fpc = FloatingPanelController()
         var locationDetailsVC = LocationDetailsViewController()
