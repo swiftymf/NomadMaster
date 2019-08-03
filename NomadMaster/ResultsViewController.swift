@@ -29,9 +29,9 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         mapSearchController.searchResultsUpdater = self
         mapSearchController.hidesNavigationBarDuringPresentation = false
         mapSearchController.obscuresBackgroundDuringPresentation = false
-        mapSearchController.dimsBackgroundDuringPresentation = true
-        mapSearchController.definesPresentationContext = true
-        
+        mapSearchController.definesPresentationContext = false
+
+        // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
         tableView.tableHeaderView = mapSearchController.searchBar
     }
     
@@ -80,6 +80,8 @@ extension ResultsViewController {
         
         if fpc.isViewLoaded {
             fpc.dismiss(animated: true, completion: nil)
+        } else if mapSearchController.isViewLoaded {
+            mapSearchController.dismiss(animated: true, completion: nil)
         }
         // show new Floating Panel with details of the location
         fpc = FloatingPanelController()
@@ -129,4 +131,5 @@ extension ResultsViewController: UISearchResultsUpdating {
         updateSearchResults(for: mapSearchController)
     }
 }
+
 
