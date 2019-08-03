@@ -30,9 +30,11 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         mapSearchController.hidesNavigationBarDuringPresentation = false
         mapSearchController.obscuresBackgroundDuringPresentation = false
         mapSearchController.definesPresentationContext = false
-
+        mapSearchController.searchBar.barTintColor = .white
+        
         // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
         tableView.tableHeaderView = mapSearchController.searchBar
+
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
@@ -74,9 +76,10 @@ extension ResultsViewController {
         cell.detailTextLabel?.text = parseAddress(selectedItem: selectedItem)
         return cell
     }
+
     
+    // TODO: - Show pin for location selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("cell at \(indexPath.row) tapped")
         
         if fpc.isViewLoaded {
             fpc.dismiss(animated: true, completion: nil)
