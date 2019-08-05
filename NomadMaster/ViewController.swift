@@ -10,11 +10,16 @@ import UIKit
 import MapKit
 import FloatingPanel
 
+protocol HandleMapSearch {
+    func dropPinZoomIn(placemark: MKPlacemark)
+}
+
 class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
 
     var floatingPanel: FloatingPanelController!
     var locationManager = CLLocationManager()
     var resultsVC: ResultsViewController!
+    var selectedPin: MKPlacemark? = nil
 
     @IBOutlet weak var mapView: MKMapView!
     
@@ -22,9 +27,11 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         super.viewDidLoad()
         
         locationManager.delegate = self
-        
+    
         showFloatingPanel()
         centerOnUserLocation()
+        
+        resultsVC.handleMapSearchDelegate = self
 
     }
 
@@ -57,3 +64,19 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     }
 }
 
+extension ViewController: HandleMapSearch {
+    func dropPinZoomIn(placemark: MKPlacemark) {
+        selectedPin = placemark
+        mapView.removeAnnotations(mapView.annotations)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = placemark.coordinate
+        annotation.title = placemark.title
+        if let city = placemark.locality,
+            let state = placemark.administrativeArea {
+            annotation.subtitle = "\(city), \(state)"
+        }
+        mapView.addAnnotation(annotation)
+        let region = MKCoordinateRegion(center: placemark.coordinate, latitudinalMeters: 10.0, longitudinalMeters: 10.0)
+        mapView.setRegion(region, animated: true)
+    }
+}

@@ -18,6 +18,8 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var mapView: MKMapView? = nil
     var fpc = FloatingPanelController()
     
+    var handleMapSearchDelegate: HandleMapSearch? = nil
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var visualEffectView: UIVisualEffectView!
     
@@ -38,24 +40,17 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
-        // put a space between "4" and "Melrose Place"
         let firstSpace = (selectedItem.subThoroughfare != nil && selectedItem.thoroughfare != nil) ? " " : ""
-        // put a comma between street and city/state
         let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) && (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
-        // put a space between "Washington" and "DC"
         let secondSpace = (selectedItem.subAdministrativeArea != nil && selectedItem.administrativeArea != nil) ? " " : ""
         let addressLine = String(
             format:"%@%@%@%@%@%@%@",
-            // street number
             selectedItem.subThoroughfare ?? "",
             firstSpace,
-            // street name
             selectedItem.thoroughfare ?? "",
             comma,
-            // city
             selectedItem.locality ?? "",
             secondSpace,
-            // state
             selectedItem.administrativeArea ?? ""
         )
         return addressLine
@@ -99,6 +94,11 @@ extension ResultsViewController {
         self.present(fpc, animated: true, completion: nil)
         
         // place pin on map when a location is selected
+        let selectedItem = matchingItems[indexPath.row].placemark
+        handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem)
+
+        // instead of dismiss, lower to .tip (or whatever it's called to the bottom of the view)
+//        dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Private instance methods
@@ -134,5 +134,4 @@ extension ResultsViewController: UISearchResultsUpdating {
         updateSearchResults(for: mapSearchController)
     }
 }
-
 
