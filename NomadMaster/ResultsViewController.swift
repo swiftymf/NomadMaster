@@ -133,5 +133,7 @@ extension ResultsViewController: UISearchResultsUpdating {
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         updateSearchResults(for: mapSearchController)
     }
+    
+
 }
 

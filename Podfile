@@ -8,5 +8,6 @@ target 'NomadMaster' do
   # Pods for NomadMaster
 
 pod 'FloatingPanel'
+pod 'Firebase/Analytics'
 
 end

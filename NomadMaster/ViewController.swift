@@ -14,7 +14,7 @@ protocol HandleMapSearch {
     func dropPinZoomIn(placemark: MKPlacemark)
 }
 
-class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate {
 
     var floatingPanel: FloatingPanelController!
     var locationManager = CLLocationManager()
@@ -62,6 +62,27 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         mapView.setRegion(coordinateRegion, animated: true)
         locationManager.stopUpdatingLocation()
     }
+    
+    // MARK: UISearchBarDelegate
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        floatingPanel.move(to: .half, animated: true)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.showsCancelButton = false
+        floatingPanel.move(to: .tip, animated: true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+        resultsVC.tableView.alpha = 1.0
+        floatingPanel.move(to: .full, animated: true)
+    }
+
+    
 }
 
 extension ViewController: HandleMapSearch {

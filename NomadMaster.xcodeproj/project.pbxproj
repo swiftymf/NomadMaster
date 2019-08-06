@@ -15,6 +15,7 @@
 		2A8EC95122F1FE1100238A8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A8EC94F22F1FE1100238A8D /* LaunchScreen.storyboard */; };
 		2A8EC95922F1FFCD00238A8D /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8EC95822F1FFCD00238A8D /* ResultsViewController.swift */; };
 		2AAD9CC922F497AD00A6C24E /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAD9CC822F497AD00A6C24E /* LocationDetailsViewController.swift */; };
+		2AE87A0F22F9EB4500CF2B9D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2AE87A0E22F9EB4500CF2B9D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		2A8EC95222F1FE1100238A8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A8EC95822F1FFCD00238A8D /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		2AAD9CC822F497AD00A6C24E /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationDetailsViewController.swift; path = "../../../../../System/Volumes/Data/Users/markith/Current Projects/NomadMaster/NomadMaster/LocationDetailsViewController.swift"; sourceTree = "<group>"; };
+		2AE87A0E22F9EB4500CF2B9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9335B9F24C0BDE60A89E37D4 /* Pods-NomadMaster.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NomadMaster.release.xcconfig"; path = "Target Support Files/Pods-NomadMaster/Pods-NomadMaster.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +84,7 @@
 				2A8EC94D22F1FE1100238A8D /* Assets.xcassets */,
 				2A8EC94F22F1FE1100238A8D /* LaunchScreen.storyboard */,
 				2A8EC95222F1FE1100238A8D /* Info.plist */,
+				2AE87A0E22F9EB4500CF2B9D /* GoogleService-Info.plist */,
 			);
 			path = NomadMaster;
 			sourceTree = "<group>";
@@ -155,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A8EC95122F1FE1100238A8D /* LaunchScreen.storyboard in Resources */,
+				2AE87A0F22F9EB4500CF2B9D /* GoogleService-Info.plist in Resources */,
 				2A8EC94E22F1FE1100238A8D /* Assets.xcassets in Resources */,
 				2A8EC94C22F1FE0F00238A8D /* Main.storyboard in Resources */,
 			);
