@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import FloatingPanel
+import Firebase
 
 protocol HandleMapSearch {
     func dropPinZoomIn(placemark: MKPlacemark)
@@ -16,6 +17,8 @@ protocol HandleMapSearch {
 
 class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate {
 
+    var ref: DatabaseReference!
+    
     var floatingPanel: FloatingPanelController!
     var locationManager = CLLocationManager()
     var resultsVC: ResultsViewController!
@@ -26,6 +29,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ref = Database.database().reference()
         locationManager.delegate = self
     
         showFloatingPanel()
@@ -100,4 +104,5 @@ extension ViewController: HandleMapSearch {
         let region = MKCoordinateRegion(center: placemark.coordinate, latitudinalMeters: 10.0, longitudinalMeters: 10.0)
         mapView.setRegion(region, animated: true)
     }
+    
 }
