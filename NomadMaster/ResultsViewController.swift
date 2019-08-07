@@ -86,6 +86,12 @@ extension ResultsViewController {
         var locationDetailsVC = LocationDetailsViewController()
         locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
         
+        // if location not in database { (based on coordinates?)
+        //    locationDetailsVC.commentButtonTapped.text = "Be the first to comment on this location"
+        // } else {
+        //    load details from database (check that address/phone haven't changed)
+        // }
+        
         locationDetailsVC.nameText = matchingItems[indexPath.row].name ?? "Name unavailable"
         locationDetailsVC.phoneText = matchingItems[indexPath.row].phoneNumber ?? "Phone number unavailable"
         locationDetailsVC.addressText = parseAddress(selectedItem: matchingItems[indexPath.row].placemark) 

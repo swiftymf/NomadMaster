@@ -111,31 +111,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="8ye-xV-wqm">
-                                <rect key="frame" x="36" y="80" width="342" height="132"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="8ye-xV-wqm">
+                                <rect key="frame" x="36" y="80" width="342" height="60"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Business Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0rx-fD-6nl">
-                                        <rect key="frame" x="0.0" y="0.0" width="342" height="36"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Business Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0rx-fD-6nl">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="18"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="36" id="arB-Bg-58l"/>
+                                            <constraint firstAttribute="height" constant="18" id="arB-Bg-58l"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VvR-a8-xNU">
-                                        <rect key="frame" x="0.0" y="48" width="342" height="36"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VvR-a8-xNU">
+                                        <rect key="frame" x="0.0" y="21" width="342" height="18"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="36" id="jlf-PV-oE4"/>
+                                            <constraint firstAttribute="height" constant="18" id="jlf-PV-oE4"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v2e-ar-wB2">
-                                        <rect key="frame" x="0.0" y="96" width="342" height="36"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v2e-ar-wB2">
+                                        <rect key="frame" x="0.0" y="42" width="342" height="18"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="36" id="A08-PT-pJH"/>
+                                            <constraint firstAttribute="height" constant="18" id="A08-PT-pJH"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -146,16 +146,35 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qfx-eN-fP3">
                                 <rect key="frame" x="348" y="42" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="X"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="24"/>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="dismissDetailsButton:" destination="NMf-cz-KGG" eventType="touchUpInside" id="d6S-KN-VW0"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="il3-af-NLv">
+                                <rect key="frame" x="81" y="158" width="252" height="30"/>
+                                <state key="normal" title="Leave a comment about this location"/>
+                                <connections>
+                                    <action selector="commentButtonTapped:" destination="NMf-cz-KGG" eventType="touchUpInside" id="SRc-bP-xy7"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add Tableview here to show all the comments left by previous users" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TId-iK-i5i">
+                                <rect key="frame" x="81" y="200" width="252" height="73"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="p3q-tr-VW3" firstAttribute="trailing" secondItem="8ye-xV-wqm" secondAttribute="trailing" constant="36" id="JP6-V3-T0q"/>
                             <constraint firstItem="8ye-xV-wqm" firstAttribute="top" secondItem="p3q-tr-VW3" secondAttribute="top" constant="36" id="JRZ-wx-VJb"/>
+                            <constraint firstItem="il3-af-NLv" firstAttribute="top" secondItem="8ye-xV-wqm" secondAttribute="bottom" constant="18" id="VRp-dw-5Sm"/>
+                            <constraint firstItem="il3-af-NLv" firstAttribute="centerX" secondItem="VjL-2f-rzv" secondAttribute="centerX" id="hDj-aW-xF7"/>
                             <constraint firstItem="8ye-xV-wqm" firstAttribute="leading" secondItem="p3q-tr-VW3" secondAttribute="leading" constant="36" id="hxJ-0i-mcb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="p3q-tr-VW3"/>

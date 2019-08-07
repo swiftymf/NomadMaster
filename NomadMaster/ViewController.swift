@@ -34,7 +34,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     
         showFloatingPanel()
         centerOnUserLocation()
-        
+        // after getting user location, load nearby locations from database
         resultsVC.handleMapSearchDelegate = self
 
     }
