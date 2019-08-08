@@ -14,15 +14,20 @@ struct LocationObject {
     let ref: DatabaseReference?
     let key: String
     let name: String
-    let comment: [String]
+    let comment: [String]  // Change to dictionary? [username: comment]
     let addedByUser: String
+    let address: String
+
+    // TODO: - Add these properties
+//    let coordinates: CLLocationCoordinates?
     
-    init(name: String, comment: [String], addedByUser: String, key: String = "") {
+    init(name: String, comment: [String], addedByUser: String, key: String = "", address: String) {
         self.ref = nil
         self.key = key
         self.name = name
         self.comment = comment
         self.addedByUser = addedByUser
+        self.address = address
     }
     
     init?(snapshot: DataSnapshot) {
@@ -30,7 +35,8 @@ struct LocationObject {
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
             let comment = value["comment"] as? [String],
-            let addedByUser = value["addedByUser"] as? String else {
+            let addedByUser = value["addedByUser"] as? String,
+            let address = value["address"] as? String else {
                 return nil
         }
         
@@ -39,13 +45,15 @@ struct LocationObject {
         self.name = name
         self.comment = comment
         self.addedByUser = addedByUser
+        self.address = address
     }
     
     func toAnyObject() -> Any {
         return [
             "name": name,
             "comment": [comment],
-            "addedByUser": addedByUser
+            "addedByUser": addedByUser,
+            "address": address
         ]
     }
 }

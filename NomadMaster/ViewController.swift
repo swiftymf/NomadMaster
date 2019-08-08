@@ -85,7 +85,6 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         resultsVC.tableView.alpha = 1.0
         floatingPanel.move(to: .full, animated: true)
     }
-
     
 }
 

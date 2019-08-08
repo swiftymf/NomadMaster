@@ -9,12 +9,16 @@
 import UIKit
 import MapKit
 import FloatingPanel
+import Firebase
 
 class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var ref: DatabaseReference!
+
     var mapSearchController = UISearchController(searchResultsController: nil)
     // for searching
     var matchingItems:[MKMapItem] = []
+    var items: [LocationObject] = []
     var mapView: MKMapView? = nil
     var fpc = FloatingPanelController()
     
@@ -26,6 +30,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ref = Database.database().reference()
         tableView.delegate = self
         tableView.dataSource = self
         mapSearchController.searchResultsUpdater = self
@@ -37,6 +42,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
         tableView.tableHeaderView = mapSearchController.searchBar
 
+        loadNearbyLocations()
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
@@ -66,6 +72,13 @@ extension ResultsViewController {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+//        let locationItem = items[indexPath.row]
+//        cell.textLabel?.text = locationItem.name
+//        cell.detailTextLabel?.text = locationItem.address
+//        return cell
+
+        // This works for searching for locations
         let selectedItem = matchingItems[indexPath.row].placemark
         cell.textLabel?.text = selectedItem.name
         cell.detailTextLabel?.text = parseAddress(selectedItem: selectedItem)
@@ -129,6 +142,29 @@ extension ResultsViewController {
             self.tableView.reloadData()
         }
     }
+    
+    func loadNearbyLocations() {
+        
+        ref.queryOrdered(byChild: "userFeedback").observe(.value, with: { snapshot in
+        
+            // This is loading the info from Firebase
+            print("snapshot: \(snapshot.value as Any)")
+            var newItems: [LocationObject] = []
+            for child in snapshot.children {
+                if let snapshot = child as? DataSnapshot,
+                    let locationObject = LocationObject(snapshot: snapshot) {
+                    
+                    // Not appending, probably because the data isn't coming back in the same format as LocationObject
+                    newItems.append(locationObject)
+                }
+            }
+            print("newItems: \(newItems)")
+            self.items = newItems
+            self.tableView.reloadData()
+        })
+        
+    }
+
 }
 
 extension ResultsViewController: UISearchResultsUpdating {
