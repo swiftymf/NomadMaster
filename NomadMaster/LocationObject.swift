@@ -14,10 +14,10 @@ struct LocationObject {
     let ref: DatabaseReference?
     let key: String
     let name: String
-    let comment: String
+    let comment: [String]
     let addedByUser: String
     
-    init(name: String, comment: String, addedByUser: String, key: String = "") {
+    init(name: String, comment: [String], addedByUser: String, key: String = "") {
         self.ref = nil
         self.key = key
         self.name = name
@@ -29,7 +29,7 @@ struct LocationObject {
         guard
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
-            let comment = value["comment"] as? String,
+            let comment = value["comment"] as? [String],
             let addedByUser = value["addedByUser"] as? String else {
                 return nil
         }
@@ -44,7 +44,7 @@ struct LocationObject {
     func toAnyObject() -> Any {
         return [
             "name": name,
-            "comment": comment,
+            "comment": [comment],
             "addedByUser": addedByUser
         ]
     }
