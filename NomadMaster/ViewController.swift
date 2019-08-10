@@ -29,29 +29,33 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
+        resultsVC.mapView = mapView
+
         ref = Database.database().reference()
         locationManager.delegate = self
-    
-        showFloatingPanel()
+
         centerOnUserLocation()
         // after getting user location, load nearby locations from database
         resultsVC.handleMapSearchDelegate = self
-
-    }
-
-    func showFloatingPanel() {
+        
         floatingPanel = FloatingPanelController()
         floatingPanel.delegate = self
-        
-        resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
-        resultsVC.mapView = mapView
         
         floatingPanel.set(contentViewController: resultsVC)
         floatingPanel.track(scrollView: resultsVC?.tableView)
         floatingPanel.addPanel(toParent: self)
         view.addSubview(floatingPanel.view)
+
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        floatingPanel.addPanel(toParent: self, animated: true)
+        resultsVC.mapSearchController.searchBar.delegate = self
+
+    }
     func centerOnUserLocation() {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             locationManager.startUpdatingLocation()
@@ -69,15 +73,10 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     
     // MARK: UISearchBarDelegate
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        floatingPanel.move(to: .half, animated: true)
-    }
-    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.showsCancelButton = false
-        floatingPanel.move(to: .tip, animated: true)
+        floatingPanel.move(to: .half, animated: true)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {

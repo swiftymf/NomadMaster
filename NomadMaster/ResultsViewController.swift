@@ -21,6 +21,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var items: [LocationObject] = []
     var mapView: MKMapView? = nil
     var fpc = FloatingPanelController()
+    var vc = ViewController()
     
     var handleMapSearchDelegate: HandleMapSearch? = nil
     
@@ -36,12 +37,12 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         mapSearchController.searchResultsUpdater = self
         mapSearchController.hidesNavigationBarDuringPresentation = false
         mapSearchController.obscuresBackgroundDuringPresentation = false
-        mapSearchController.definesPresentationContext = false
+//        mapSearchController.definesPresentationContext = false
         mapSearchController.searchBar.barTintColor = .white
-        
+//        mapSearchController.searchBar.searchBarStyle = .minimal
         // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
         tableView.tableHeaderView = mapSearchController.searchBar
-
+        definesPresentationContext = false
         loadNearbyLocations()
     }
     
