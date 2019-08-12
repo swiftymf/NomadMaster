@@ -103,7 +103,8 @@ extension ResultsViewController {
         // if location not in database { (based on coordinates?)
         //    locationDetailsVC.commentButtonTapped.text = "Be the first to comment on this location"
         // } else {
-        //    load details from database (check that address/phone haven't changed)
+        //    load details from database including comments to populate tableView
+        //    (check that address/phone haven't changed)
         // }
         
         locationDetailsVC.nameText = matchingItems[indexPath.row].name ?? "Name unavailable"
@@ -149,7 +150,7 @@ extension ResultsViewController {
         ref.queryOrdered(byChild: "userFeedback").observe(.value, with: { snapshot in
         
             // This is loading the info from Firebase
-            print("snapshot: \(snapshot.value as Any)")
+//            print("snapshot: \(snapshot.value as Any)")
             var newItems: [LocationObject] = []
             for child in snapshot.children {
                 if let snapshot = child as? DataSnapshot,
@@ -159,7 +160,6 @@ extension ResultsViewController {
                     newItems.append(locationObject)
                 }
             }
-            print("newItems: \(newItems)")
             self.items = newItems
             self.tableView.reloadData()
         })
