@@ -16,14 +16,14 @@ protocol HandleMapSearch {
 }
 
 class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate {
-
+    
     var ref: DatabaseReference!
     
     var floatingPanel: FloatingPanelController!
     var locationManager = CLLocationManager()
     var resultsVC: ResultsViewController!
     var selectedPin: MKPlacemark? = nil
-
+    
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
@@ -31,10 +31,10 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
         resultsVC.mapView = mapView
-
+        
         ref = Database.database().reference(withPath: "userFeedback")
         locationManager.delegate = self
-
+        
         centerOnUserLocation()
         // after getting user location, load nearby locations from database
         resultsVC.handleMapSearchDelegate = self
@@ -54,7 +54,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         
         floatingPanel.addPanel(toParent: self, animated: true)
         resultsVC.mapSearchController.searchBar.delegate = self
-
+        
     }
     func centerOnUserLocation() {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
@@ -96,12 +96,17 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
                 if let snapshot = child as? DataSnapshot,
                     let location = LocationObject(snapshot: snapshot) {
                     newItems.append(location)
+                    
+                    let annotation = MKPointAnnotation()
+                    annotation.title = location.name
+                    annotation.coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+                    self.mapView.addAnnotation(annotation)
                 }
             }
-//            self.items = newItems
+            //            self.items = newItems
         })
     }
-
+    
 }
 
 extension ViewController: HandleMapSearch {
