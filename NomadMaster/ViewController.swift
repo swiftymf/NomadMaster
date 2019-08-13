@@ -32,7 +32,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
         resultsVC.mapView = mapView
 
-        ref = Database.database().reference()
+        ref = Database.database().reference(withPath: "userFeedback")
         locationManager.delegate = self
 
         centerOnUserLocation()
@@ -46,7 +46,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         floatingPanel.track(scrollView: resultsVC?.tableView)
         floatingPanel.addPanel(toParent: self)
         view.addSubview(floatingPanel.view)
-
+        loadNearbyLocations()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -88,6 +88,20 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         floatingPanel.move(to: .full, animated: true)
     }
     
+    func loadNearbyLocations() {
+        
+        ref.observe(.value, with: { snapshot in
+            var newItems: [LocationObject] = []
+            for child in snapshot.children {
+                if let snapshot = child as? DataSnapshot,
+                    let location = LocationObject(snapshot: snapshot) {
+                    newItems.append(location)
+                }
+            }
+//            self.items = newItems
+        })
+    }
+
 }
 
 extension ViewController: HandleMapSearch {

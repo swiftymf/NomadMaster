@@ -44,7 +44,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
         tableView.tableHeaderView = mapSearchController.searchBar
         definesPresentationContext = false
-        loadNearbyLocations()
+//        loadNearbyLocations()
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
@@ -100,17 +100,18 @@ extension ResultsViewController {
         fpc = FloatingPanelController()
         var locationDetailsVC = LocationDetailsViewController()
         locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
-        
-        locationDetailsVC.nameText = matchingItems[indexPath.row].name ?? "Name unavailable"
-        locationDetailsVC.phoneText = matchingItems[indexPath.row].phoneNumber ?? "Phone number unavailable"
-        locationDetailsVC.addressText = parseAddress(selectedItem: matchingItems[indexPath.row].placemark) 
+        let selectedItem = matchingItems[indexPath.row]
+
+        locationDetailsVC.nameText = selectedItem.name ?? "Name unavailable"
+        locationDetailsVC.phoneText = selectedItem.phoneNumber ?? "Phone number unavailable"
+        locationDetailsVC.addressText = parseAddress(selectedItem: selectedItem.placemark)
+        locationDetailsVC.locationSelected = selectedItem
         fpc.set(contentViewController: locationDetailsVC)
         fpc.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
         self.present(fpc, animated: true, completion: nil)
         
         // place pin on map when a location is selected
-        let selectedItem = matchingItems[indexPath.row].placemark
-        handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem)
+        handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem.placemark)
 
         // instead of dismiss, lower to .tip (or whatever it's called to the bottom of the view)
 //        dismiss(animated: true, completion: nil)
@@ -139,26 +140,6 @@ extension ResultsViewController {
         }
     }
     
-    func loadNearbyLocations() {
-        
-        ref.queryOrdered(byChild: "userFeedback").observe(.value, with: { snapshot in
-        
-            // This is loading the info from Firebase
-//            print("snapshot: \(snapshot.value as Any)")
-            var newItems: [LocationObject] = []
-            for child in snapshot.children {
-                if let snapshot = child as? DataSnapshot,
-                    let locationObject = LocationObject(snapshot: snapshot) {
-                    
-                    // Not appending, probably because the data isn't coming back in the same format as LocationObject
-                    newItems.append(locationObject)
-                }
-            }
-            self.items = newItems
-            self.tableView.reloadData()
-        })
-        
-    }
 
 }
 

@@ -16,24 +16,30 @@ struct LocationObject {
     var name: String
     var comment: [[String: String]]  // Change to dictionary? [username: comment]
     var address: String
-
-    // TODO: - Add these properties
-//    let coordinates: CLLocationCoordinates?
+    var longitude: Double
+    var latitude: Double
     
-    init(name: String, comment: [[String: String]], key: String = "", address: String) {
+    // TODO: - Add these properties
+    //    let coordinates: CLLocationCoordinates?
+    
+    init(name: String, comment: [[String: String]], key: String = "", address: String, longitude: Double, latitude: Double) {
         self.ref = nil
         self.key = key
         self.name = name
         self.comment = comment
         self.address = address
+        self.longitude = longitude
+        self.latitude = latitude
     }
     
     init?(snapshot: DataSnapshot) {
         guard
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
-            var comment = value["comment"] as? [[String: String]],
-            var address = value["address"] as? String else {
+            let comment = value["comment"] as? [[String: String]],
+            let address = value["address"] as? String,
+            let longitude = value["longitude"] as? Double,
+            let latitude = value["latitude"] as? Double else {
                 return nil
         }
         
@@ -42,13 +48,17 @@ struct LocationObject {
         self.name = name
         self.comment = comment
         self.address = address
+        self.longitude = longitude
+        self.latitude = latitude
     }
     
     func toAnyObject() -> Any {
         return [
             "name": name,
             "comment": comment,
-            "address": address
+            "address": address,
+            "longitude": longitude,
+            "latitude": latitude
         ]
     }
 }
