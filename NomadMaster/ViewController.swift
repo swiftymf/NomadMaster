@@ -22,7 +22,9 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     var floatingPanel: FloatingPanelController!
     var locationManager = CLLocationManager()
     var resultsVC: ResultsViewController!
+    var locationDetailsVC: LocationDetailsViewController!
     var selectedPin: MKPlacemark? = nil
+    var items: [LocationObject] = []
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -31,10 +33,12 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
         resultsVC.mapView = mapView
+        locationDetailsVC = storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController
+
         
         ref = Database.database().reference(withPath: "userFeedback")
         locationManager.delegate = self
-        
+        mapView.delegate = self
         centerOnUserLocation()
         // after getting user location, load nearby locations from database
         resultsVC.handleMapSearchDelegate = self
@@ -103,9 +107,41 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
                     self.mapView.addAnnotation(annotation)
                 }
             }
-            //            self.items = newItems
+            self.items = newItems
         })
     }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        // Show detailsVC when annotation is selected? or do something like that
+        
+        
+        // PIN ISN'T CHANGING DETAILS. WHATEVER THE FIRST ONE SELECTED IS STAY THAT ONE
+        
+        
+        
+        print("someone touched an annotation")
+        let selectedAnnotation = view.annotation
+        for item in items {
+            // item DOES exists in DB...
+            if selectedAnnotation?.coordinate.latitude == item.latitude && selectedAnnotation?.coordinate.longitude == item.longitude {
+                // pass info to detailsVC
+                locationDetailsVC.selectedLocation = item
+                
+//                locationDetailsVC.nameText = selectedItem.name ?? "Name unavailable"
+//                locationDetailsVC.phoneText = selectedItem.phoneNumber ?? "Phone number unavailable"
+//                locationDetailsVC.addressText = parseAddress(selectedItem: selectedItem.placemark)
+//                locationDetailsVC.locationSelected = selectedItem
+                floatingPanel = FloatingPanelController()
+                floatingPanel.set(contentViewController: locationDetailsVC)
+                floatingPanel.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
+                self.present(floatingPanel, animated: true, completion: nil)
+                break
+            } else {
+                // item DOES NOT exist in DB...
+            }
+        }
+    }
+    
     
 }
 
@@ -115,7 +151,7 @@ extension ViewController: HandleMapSearch {
         mapView.removeAnnotations(mapView.annotations)
         let annotation = MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
-        annotation.title = placemark.title
+        annotation.title = placemark.name
         if let city = placemark.locality,
             let state = placemark.administrativeArea {
             annotation.subtitle = "\(city), \(state)"

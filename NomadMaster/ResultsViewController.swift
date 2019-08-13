@@ -102,10 +102,10 @@ extension ResultsViewController {
         locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
         let selectedItem = matchingItems[indexPath.row]
 
-        locationDetailsVC.nameText = selectedItem.name ?? "Name unavailable"
-        locationDetailsVC.phoneText = selectedItem.phoneNumber ?? "Phone number unavailable"
-        locationDetailsVC.addressText = parseAddress(selectedItem: selectedItem.placemark)
-        locationDetailsVC.locationSelected = selectedItem
+        let coordinate = selectedItem.placemark.coordinate
+        let item = LocationObject(name: selectedItem.name ?? "", comment: [], address: parseAddress(selectedItem: selectedItem.placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
+        
+        locationDetailsVC.selectedLocation = item
         fpc.set(contentViewController: locationDetailsVC)
         fpc.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
         self.present(fpc, animated: true, completion: nil)

@@ -15,6 +15,7 @@ struct LocationObject {
     let key: String
     var name: String
     var comment: [[String: String]]  // Change to dictionary? [username: comment]
+//    var phoneNumber: String
     var address: String
     var longitude: Double
     var latitude: Double
