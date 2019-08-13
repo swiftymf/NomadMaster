@@ -76,12 +76,15 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.showsCancelButton = false
+        resultsVC.matchingItems.removeAll()
+        resultsVC.tableView.reloadData()
         floatingPanel.move(to: .half, animated: true)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
         resultsVC.tableView.alpha = 1.0
+        resultsVC.fpc.dismiss(animated: true, completion: nil)
         floatingPanel.move(to: .full, animated: true)
     }
     

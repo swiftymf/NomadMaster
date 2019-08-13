@@ -13,9 +13,9 @@ struct LocationObject {
     
     let ref: DatabaseReference?
     let key: String
-    let name: String
-    let comment: [[String: String]]  // Change to dictionary? [username: comment]
-    let address: String
+    var name: String
+    var comment: [[String: String]]  // Change to dictionary? [username: comment]
+    var address: String
 
     // TODO: - Add these properties
 //    let coordinates: CLLocationCoordinates?
@@ -32,8 +32,8 @@ struct LocationObject {
         guard
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
-            let comment = value["comment"] as? [[String: String]],
-            let address = value["address"] as? String else {
+            var comment = value["comment"] as? [[String: String]],
+            var address = value["address"] as? String else {
                 return nil
         }
         

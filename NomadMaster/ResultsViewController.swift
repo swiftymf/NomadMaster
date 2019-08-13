@@ -40,6 +40,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //        mapSearchController.definesPresentationContext = false
         mapSearchController.searchBar.barTintColor = .white
 //        mapSearchController.searchBar.searchBarStyle = .minimal
+        
         // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
         tableView.tableHeaderView = mapSearchController.searchBar
         definesPresentationContext = false
@@ -99,13 +100,6 @@ extension ResultsViewController {
         fpc = FloatingPanelController()
         var locationDetailsVC = LocationDetailsViewController()
         locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
-        
-        // if location not in database { (based on coordinates?)
-        //    locationDetailsVC.commentButtonTapped.text = "Be the first to comment on this location"
-        // } else {
-        //    load details from database including comments to populate tableView
-        //    (check that address/phone haven't changed)
-        // }
         
         locationDetailsVC.nameText = matchingItems[indexPath.row].name ?? "Name unavailable"
         locationDetailsVC.phoneText = matchingItems[indexPath.row].phoneNumber ?? "Phone number unavailable"
