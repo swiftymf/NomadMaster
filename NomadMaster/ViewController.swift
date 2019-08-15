@@ -115,9 +115,9 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         // Show detailsVC when annotation is selected? or do something like that
         
         
-        // PIN ISN'T CHANGING DETAILS. WHATEVER THE FIRST ONE SELECTED IS STAY THAT ONE
+        // PIN ISN'T CHANGING DETAILS. WHATEVER THE FIRST ONE SELECTED IT STAYS THAT ONE
         
-        
+        // Move searchBarController to top of screen since it doesn't work with FloatingPanel
         
         print("someone touched an annotation")
         let selectedAnnotation = view.annotation
