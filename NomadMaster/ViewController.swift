@@ -15,21 +15,40 @@ protocol HandleMapSearch {
     func dropPinZoomIn(placemark: MKPlacemark)
 }
 
-class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, CLLocationManagerDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, UISearchBarDelegate {
     
     var ref: DatabaseReference!
-    
-    var floatingPanel: FloatingPanelController!
     var locationManager = CLLocationManager()
+
+    var floatingPanel: FloatingPanelController!
     var resultsVC: ResultsViewController!
     var locationDetailsVC: LocationDetailsViewController!
     var selectedPin: MKPlacemark? = nil
+    var matchingItems:[MKMapItem] = []
     var items: [LocationObject] = []
+    var resultSearchController: UISearchController? = nil
     
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
+        
+        let locationSearchTable = storyboard?.instantiateViewController(withIdentifier: "LocationSearchTable") as! LocationSearchTable
+        resultSearchController = UISearchController(searchResultsController: locationSearchTable)
+        resultSearchController?.searchResultsUpdater = locationSearchTable
+        
+        let searchBar = resultSearchController!.searchBar
+        searchBar.sizeToFit()
+        searchBar.placeholder = "Search for places"
+        navigationItem.titleView = resultSearchController?.searchBar
+        resultSearchController?.hidesNavigationBarDuringPresentation = false
+        resultSearchController?.dimsBackgroundDuringPresentation = true
+        definesPresentationContext = true
         
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
         resultsVC.mapView = mapView
@@ -37,9 +56,8 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
 
         
         ref = Database.database().reference(withPath: "userFeedback")
-        locationManager.delegate = self
         mapView.delegate = self
-        centerOnUserLocation()
+        
         // after getting user location, load nearby locations from database
         resultsVC.handleMapSearchDelegate = self
         
@@ -57,22 +75,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         super.viewDidAppear(true)
         
         floatingPanel.addPanel(toParent: self, animated: true)
-        resultsVC.mapSearchController.searchBar.delegate = self
         
-    }
-    func centerOnUserLocation() {
-        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-            locationManager.startUpdatingLocation()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.first!
-        let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
-        mapView.setRegion(coordinateRegion, animated: true)
-        locationManager.stopUpdatingLocation()
     }
     
     // MARK: UISearchBarDelegate
@@ -142,6 +145,29 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         }
     }
     
+    // MARK: - Private instance methods
+    
+//    func searchBarIsEmpty() -> Bool {
+//        // Returns true if the text is empty or nil
+//        return searchBar.isEmpty ?? true
+//    }
+//
+//    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+//        guard let mapView = mapView,
+//            let searchBarText = searchBar else { return }
+//        let request = MKLocalSearch.Request()
+//        request.naturalLanguageQuery = searchBarText
+//        request.region = mapView.region
+//        let search = MKLocalSearch(request: request)
+//        search.start { response, _ in
+//            guard let response = response else {
+//                return
+//            }
+//            self.matchingItems = response.mapItems
+//            self.resultsVC.tableView.reloadData()
+//        }
+//    }
+
     
 }
 
@@ -161,4 +187,36 @@ extension ViewController: HandleMapSearch {
         mapView.setRegion(region, animated: true)
     }
     
+    
+}
+
+//extension ViewController: UISearchResultsUpdating {
+//        func updateSearchResults(for searchController: UISearchController) {
+//            filterContentForSearchText(searchController.searchBar.text!)
+//        }
+//        
+//        func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+//            updateSearchResults(for: resultSearchController)
+//    }
+//}
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse {
+            locationManager.requestLocation()
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            let region = MKCoordinateRegion(center: location.coordinate, span: span)
+//            let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
+            mapView.setRegion(region, animated: true)
+            locationManager.stopUpdatingLocation()        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("error:: (error)")
+    }
 }

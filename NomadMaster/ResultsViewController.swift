@@ -15,10 +15,10 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     var ref: DatabaseReference!
 
-    var mapSearchController = UISearchController(searchResultsController: nil)
+//    var mapSearchController = UISearchController(searchResultsController: nil)
     // for searching
     var matchingItems:[MKMapItem] = []
-    var items: [LocationObject] = []
+//    var items: [LocationObject] = []
     var mapView: MKMapView? = nil
     var fpc = FloatingPanelController()
     var vc = ViewController()
@@ -34,16 +34,14 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         ref = Database.database().reference()
         tableView.delegate = self
         tableView.dataSource = self
-        mapSearchController.searchResultsUpdater = self
-        mapSearchController.hidesNavigationBarDuringPresentation = false
-        mapSearchController.obscuresBackgroundDuringPresentation = false
-//        mapSearchController.definesPresentationContext = false
-        mapSearchController.searchBar.barTintColor = .white
-//        mapSearchController.searchBar.searchBarStyle = .minimal
-        
-        // TODO: - while text if being edited, if user drags up tableView, the searchBar stays in place, fix that
-        tableView.tableHeaderView = mapSearchController.searchBar
-        definesPresentationContext = false
+//        mapSearchController.searchResultsUpdater = self
+//        mapSearchController.hidesNavigationBarDuringPresentation = false
+//        mapSearchController.dimsBackgroundDuringPresentation = true
+//        
+//        mapSearchController = UISearchController(searchResultsController: self)
+//        mapSearchController.searchResultsUpdater = self
+//        navigationItem.titleView = mapSearchController.searchBar
+//        definesPresentationContext = true
 //        loadNearbyLocations()
     }
     
@@ -91,11 +89,11 @@ extension ResultsViewController {
     // TODO: - Show pin for location selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if fpc.isViewLoaded {
-            fpc.dismiss(animated: true, completion: nil)
-        } else if mapSearchController.isViewLoaded {
-            mapSearchController.dismiss(animated: true, completion: nil)
-        }
+//        if fpc.isViewLoaded {
+//            fpc.dismiss(animated: true, completion: nil)
+//        } else if mapSearchController.isViewLoaded {
+//            mapSearchController.dismiss(animated: true, completion: nil)
+//        }
         // show new Floating Panel with details of the location
         fpc = FloatingPanelController()
         var locationDetailsVC = LocationDetailsViewController()
@@ -119,39 +117,37 @@ extension ResultsViewController {
     
     // MARK: - Private instance methods
     
-    func searchBarIsEmpty() -> Bool {
-        // Returns true if the text is empty or nil
-        return mapSearchController.searchBar.text?.isEmpty ?? true
-    }
-    
-    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-        guard let mapView = mapView,
-         let searchBarText = mapSearchController.searchBar.text else { return }
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = searchBarText
-        request.region = mapView.region
-        let search = MKLocalSearch(request: request)
-        search.start { response, _ in
-            guard let response = response else {
-                return
-            }
-            self.matchingItems = response.mapItems
-            self.tableView.reloadData()
-        }
-    }
-    
-
-}
-
-extension ResultsViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        filterContentForSearchText(searchController.searchBar.text!)
-    }
-    
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        updateSearchResults(for: mapSearchController)
-    }
+//    func searchBarIsEmpty() -> Bool {
+//        // Returns true if the text is empty or nil
+//        return mapSearchController.searchBar.text?.isEmpty ?? true
+//    }
+//    
+//    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+//        guard let mapView = mapView,
+//         let searchBarText = mapSearchController.searchBar.text else { return }
+//        let request = MKLocalSearch.Request()
+//        request.naturalLanguageQuery = searchBarText
+//        request.region = mapView.region
+//        let search = MKLocalSearch(request: request)
+//        search.start { response, _ in
+//            guard let response = response else {
+//                return
+//            }
+//            self.matchingItems = response.mapItems
+//            self.tableView.reloadData()
+//        }
+//    }
     
 
 }
+
+//extension ResultsViewController: UISearchResultsUpdating {
+//    func updateSearchResults(for searchController: UISearchController) {
+//        filterContentForSearchText(searchController.searchBar.text!)
+//    }
+//    
+//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+//        updateSearchResults(for: mapSearchController)
+//    }
+//}
 
