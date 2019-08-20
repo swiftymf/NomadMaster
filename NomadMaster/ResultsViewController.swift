@@ -14,15 +14,10 @@ import Firebase
 class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var ref: DatabaseReference!
-
-//    var mapSearchController = UISearchController(searchResultsController: nil)
-    // for searching
     var matchingItems:[MKMapItem] = []
-//    var items: [LocationObject] = []
-    var mapView: MKMapView? = nil
+    var items: [LocationObject] = []
     var fpc = FloatingPanelController()
     var vc = ViewController()
-    
     var handleMapSearchDelegate: HandleMapSearch? = nil
     
     @IBOutlet weak var tableView: UITableView!
@@ -34,15 +29,6 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         ref = Database.database().reference()
         tableView.delegate = self
         tableView.dataSource = self
-//        mapSearchController.searchResultsUpdater = self
-//        mapSearchController.hidesNavigationBarDuringPresentation = false
-//        mapSearchController.dimsBackgroundDuringPresentation = true
-//        
-//        mapSearchController = UISearchController(searchResultsController: self)
-//        mapSearchController.searchResultsUpdater = self
-//        navigationItem.titleView = mapSearchController.searchBar
-//        definesPresentationContext = true
-//        loadNearbyLocations()
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
@@ -67,7 +53,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
 extension ResultsViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return matchingItems.count
+     return matchingItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -76,8 +62,6 @@ extension ResultsViewController {
 //        let locationItem = items[indexPath.row]
 //        cell.textLabel?.text = locationItem.name
 //        cell.detailTextLabel?.text = locationItem.address
-//        return cell
-
         // This works for searching for locations
         let selectedItem = matchingItems[indexPath.row].placemark
         cell.textLabel?.text = selectedItem.name
@@ -89,11 +73,9 @@ extension ResultsViewController {
     // TODO: - Show pin for location selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        if fpc.isViewLoaded {
-//            fpc.dismiss(animated: true, completion: nil)
-//        } else if mapSearchController.isViewLoaded {
-//            mapSearchController.dismiss(animated: true, completion: nil)
-//        }
+        if fpc.isViewLoaded {
+            fpc.dismiss(animated: true, completion: nil)
+        }
         // show new Floating Panel with details of the location
         fpc = FloatingPanelController()
         var locationDetailsVC = LocationDetailsViewController()
@@ -114,40 +96,5 @@ extension ResultsViewController {
         // instead of dismiss, lower to .tip (or whatever it's called to the bottom of the view)
 //        dismiss(animated: true, completion: nil)
     }
-    
-    // MARK: - Private instance methods
-    
-//    func searchBarIsEmpty() -> Bool {
-//        // Returns true if the text is empty or nil
-//        return mapSearchController.searchBar.text?.isEmpty ?? true
-//    }
-//    
-//    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-//        guard let mapView = mapView,
-//         let searchBarText = mapSearchController.searchBar.text else { return }
-//        let request = MKLocalSearch.Request()
-//        request.naturalLanguageQuery = searchBarText
-//        request.region = mapView.region
-//        let search = MKLocalSearch(request: request)
-//        search.start { response, _ in
-//            guard let response = response else {
-//                return
-//            }
-//            self.matchingItems = response.mapItems
-//            self.tableView.reloadData()
-//        }
-//    }
-    
-
 }
-
-//extension ResultsViewController: UISearchResultsUpdating {
-//    func updateSearchResults(for searchController: UISearchController) {
-//        filterContentForSearchText(searchController.searchBar.text!)
-//    }
-//    
-//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-//        updateSearchResults(for: mapSearchController)
-//    }
-//}
 

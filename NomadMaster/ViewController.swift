@@ -13,9 +13,10 @@ import Firebase
 
 protocol HandleMapSearch {
     func dropPinZoomIn(placemark: MKPlacemark)
+    func loadDetailsView(placemark: MKPlacemark)
 }
 
-class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapViewDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearchBarDelegate {
     
     var ref: DatabaseReference!
     var locationManager = CLLocationManager()
@@ -43,6 +44,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         resultSearchController?.searchResultsUpdater = locationSearchTable
         
         let searchBar = resultSearchController!.searchBar
+        searchBar.delegate = self
         searchBar.sizeToFit()
         searchBar.placeholder = "Search for places"
         navigationItem.titleView = resultSearchController?.searchBar
@@ -50,17 +52,14 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
         resultSearchController?.dimsBackgroundDuringPresentation = true
         definesPresentationContext = true
         
-        resultsVC = storyboard?.instantiateViewController(withIdentifier: "resultsViewController") as? ResultsViewController
-        resultsVC.mapView = mapView
+        locationSearchTable.mapView = mapView
+        locationSearchTable.handleMapSearchDelegate = self
+        
+        resultsVC = storyboard?.instantiateViewController(withIdentifier: "ResultsViewController") as? ResultsViewController
         locationDetailsVC = storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController
 
         
         ref = Database.database().reference(withPath: "userFeedback")
-        mapView.delegate = self
-        
-        // after getting user location, load nearby locations from database
-        resultsVC.handleMapSearchDelegate = self
-        
         floatingPanel = FloatingPanelController()
         floatingPanel.delegate = self
         
@@ -80,20 +79,23 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     
     // MARK: UISearchBarDelegate
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        searchBar.showsCancelButton = false
-        resultsVC.matchingItems.removeAll()
-        resultsVC.tableView.reloadData()
-        floatingPanel.move(to: .half, animated: true)
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // whatever searchResults are showing should populate the mapView and ResultsTableView
+        // dismiss searchController tableView
+        dismiss(animated: true, completion: nil)
     }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.showsCancelButton = true
-        resultsVC.tableView.alpha = 1.0
-        resultsVC.fpc.dismiss(animated: true, completion: nil)
-        floatingPanel.move(to: .full, animated: true)
-    }
+//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        searchBar.resignFirstResponder()
+//        searchBar.showsCancelButton = false
+//        resultsVC.matchingItems.removeAll()
+//        resultsVC.tableView.reloadData()
+//    }
+//    
+//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+//        searchBar.showsCancelButton = true
+//        resultsVC.tableView.alpha = 1.0
+//        resultsVC.fpc.dismiss(animated: true, completion: nil)
+//    }
     
     func loadNearbyLocations() {
         
@@ -115,12 +117,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // Show detailsVC when annotation is selected? or do something like that
-        
-        
         // PIN ISN'T CHANGING DETAILS. WHATEVER THE FIRST ONE SELECTED IT STAYS THAT ONE
-        
-        // Move searchBarController to top of screen since it doesn't work with FloatingPanel
         
         print("someone touched an annotation")
         let selectedAnnotation = view.annotation
@@ -144,37 +141,13 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, MKMapVi
             }
         }
     }
-    
-    // MARK: - Private instance methods
-    
-//    func searchBarIsEmpty() -> Bool {
-//        // Returns true if the text is empty or nil
-//        return searchBar.isEmpty ?? true
-//    }
-//
-//    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-//        guard let mapView = mapView,
-//            let searchBarText = searchBar else { return }
-//        let request = MKLocalSearch.Request()
-//        request.naturalLanguageQuery = searchBarText
-//        request.region = mapView.region
-//        let search = MKLocalSearch(request: request)
-//        search.start { response, _ in
-//            guard let response = response else {
-//                return
-//            }
-//            self.matchingItems = response.mapItems
-//            self.resultsVC.tableView.reloadData()
-//        }
-//    }
-
-    
 }
 
 extension ViewController: HandleMapSearch {
     func dropPinZoomIn(placemark: MKPlacemark) {
         selectedPin = placemark
         mapView.removeAnnotations(mapView.annotations)
+        
         let annotation = MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
         annotation.title = placemark.name
@@ -183,22 +156,56 @@ extension ViewController: HandleMapSearch {
             annotation.subtitle = "\(city), \(state)"
         }
         mapView.addAnnotation(annotation)
-        let region = MKCoordinateRegion(center: placemark.coordinate, latitudinalMeters: 10.0, longitudinalMeters: 10.0)
+        //  Show DetailsVC and populate with info from placemark
+        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        let region = MKCoordinateRegion(center: placemark.coordinate, span: span)
         mapView.setRegion(region, animated: true)
     }
     
-    
-}
+    func loadDetailsView(placemark: MKPlacemark) {
+        if floatingPanel.isViewLoaded {
+            floatingPanel.dismiss(animated: true, completion: nil)
+        }
+        // show new Floating Panel with details of the location
+        floatingPanel = FloatingPanelController()
+        var locationDetailsVC = LocationDetailsViewController()
+        locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
+       
+        
+        let coordinate = placemark.coordinate
+        let item = LocationObject(name: placemark.name ?? "", comment: [], address: parseAddress(selectedItem: placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
+        
+        locationDetailsVC.selectedLocation = item
+        floatingPanel.set(contentViewController: locationDetailsVC)
+        floatingPanel.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
+        self.present(floatingPanel, animated: true, completion: nil)
 
-//extension ViewController: UISearchResultsUpdating {
-//        func updateSearchResults(for searchController: UISearchController) {
-//            filterContentForSearchText(searchController.searchBar.text!)
-//        }
-//        
-//        func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-//            updateSearchResults(for: resultSearchController)
-//    }
-//}
+    }
+    
+    func parseAddress(selectedItem:MKPlacemark) -> String {
+        // put a space between "4" and "Melrose Place"
+        let firstSpace = (selectedItem.subThoroughfare != nil && selectedItem.thoroughfare != nil) ? " " : ""
+        // put a comma between street and city/state
+        let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) && (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
+        // put a space between "Washington" and "DC"
+        let secondSpace = (selectedItem.subAdministrativeArea != nil && selectedItem.administrativeArea != nil) ? " " : ""
+        let addressLine = String(
+            format:"%@%@%@%@%@%@%@",
+            // street number
+            selectedItem.subThoroughfare ?? "",
+            firstSpace,
+            // street name
+            selectedItem.thoroughfare ?? "",
+            comma,
+            // city
+            selectedItem.locality ?? "",
+            secondSpace,
+            // state
+            selectedItem.administrativeArea ?? ""
+        )
+        return addressLine
+    }
+}
 
 extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

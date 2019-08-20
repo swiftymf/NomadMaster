@@ -88,7 +88,7 @@
         <!--Results View Controller-->
         <scene sceneID="ZQa-F7-qjv">
             <objects>
-                <viewController storyboardIdentifier="resultsViewController" id="ozB-LB-99D" customClass="ResultsViewController" customModule="NomadMaster" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ResultsViewController" id="ozB-LB-99D" customClass="ResultsViewController" customModule="NomadMaster" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="FqI-Wh-Fud">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
