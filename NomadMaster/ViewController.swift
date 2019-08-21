@@ -119,6 +119,31 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         })
     }
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if !(annotation is CustomPointAnnotation) {
+            return nil
+        }
+        
+        let reuseId = "pin"
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            annotationView?.canShowCallout = true
+        }
+        else {
+            annotationView?.annotation = annotation
+        }
+        
+        //Set annotation-specific properties **AFTER**
+        //the view is dequeued or created...
+        
+        let cpa = annotation as! CustomPointAnnotation
+        annotationView?.image = UIImage(named:cpa.imageName)
+        
+        return annotationView
+    }
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         let selectedAnnotation = view.annotation
         for item in items {
@@ -138,9 +163,10 @@ extension ViewController: HandleMapSearch {
         selectedPin = placemark
         mapView.removeAnnotations(mapView.annotations)
         
-        let annotation = MKPointAnnotation()
+        let annotation = CustomPointAnnotation()//MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
         annotation.title = placemark.name
+        annotation.imageName = "pinIcon"
         if let city = placemark.locality,
             let state = placemark.administrativeArea {
             annotation.subtitle = "\(city), \(state)"
