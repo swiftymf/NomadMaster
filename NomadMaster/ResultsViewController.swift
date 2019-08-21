@@ -27,8 +27,8 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         
         ref = Database.database().reference()
-        tableView.delegate = self
-        tableView.dataSource = self
+//        tableView.delegate = self
+//        tableView.dataSource = self
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
@@ -53,7 +53,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
 extension ResultsViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     return matchingItems.count
+     return 1//matchingItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,9 +63,9 @@ extension ResultsViewController {
 //        cell.textLabel?.text = locationItem.name
 //        cell.detailTextLabel?.text = locationItem.address
         // This works for searching for locations
-        let selectedItem = matchingItems[indexPath.row].placemark
-        cell.textLabel?.text = selectedItem.name
-        cell.detailTextLabel?.text = parseAddress(selectedItem: selectedItem)
+     //   let selectedItem = matchingItems[indexPath.row].placemark
+        cell.textLabel?.text = "HI"//selectedItem.name
+        cell.detailTextLabel?.text = "hello"//parseAddress(selectedItem: selectedItem)
         return cell
     }
 
@@ -73,25 +73,25 @@ extension ResultsViewController {
     // TODO: - Show pin for location selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if fpc.isViewLoaded {
-            fpc.dismiss(animated: true, completion: nil)
-        }
-        // show new Floating Panel with details of the location
-        fpc = FloatingPanelController()
-        var locationDetailsVC = LocationDetailsViewController()
-        locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
-        let selectedItem = matchingItems[indexPath.row]
-
-        let coordinate = selectedItem.placemark.coordinate
-        let item = LocationObject(name: selectedItem.name ?? "", comment: [], address: parseAddress(selectedItem: selectedItem.placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
-        
-        locationDetailsVC.selectedLocation = item
-        fpc.set(contentViewController: locationDetailsVC)
-        fpc.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
-        self.present(fpc, animated: true, completion: nil)
-        
-        // place pin on map when a location is selected
-        handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem.placemark)
+//        if fpc.isViewLoaded {
+//            fpc.dismiss(animated: true, completion: nil)
+//        }
+//        // show new Floating Panel with details of the location
+//        fpc = FloatingPanelController()
+//        var locationDetailsVC = LocationDetailsViewController()
+//        locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
+//        let selectedItem = matchingItems[indexPath.row]
+//
+//        let coordinate = selectedItem.placemark.coordinate
+//        let item = LocationObject(name: selectedItem.name ?? "", comment: [], address: parseAddress(selectedItem: selectedItem.placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
+//
+//        locationDetailsVC.selectedLocation = item
+//        fpc.set(contentViewController: locationDetailsVC)
+//        fpc.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
+//        self.present(fpc, animated: true, completion: nil)
+//
+//        // place pin on map when a location is selected
+//        handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem.placemark)
 
         // instead of dismiss, lower to .tip (or whatever it's called to the bottom of the view)
 //        dismiss(animated: true, completion: nil)

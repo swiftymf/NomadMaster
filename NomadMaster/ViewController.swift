@@ -21,7 +21,8 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
     var ref: DatabaseReference!
     var locationManager = CLLocationManager()
 
-    var floatingPanel: FloatingPanelController!
+    var floatingResultsView: FloatingPanelController!
+    var floatingDetailsView: FloatingPanelController!
     var resultsVC: ResultsViewController!
     var locationDetailsVC: LocationDetailsViewController!
     var selectedPin: MKPlacemark? = nil
@@ -60,20 +61,20 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
 
         
         ref = Database.database().reference(withPath: "userFeedback")
-        floatingPanel = FloatingPanelController()
-        floatingPanel.delegate = self
+        floatingResultsView = FloatingPanelController()
+        floatingResultsView.delegate = self
         
-        floatingPanel.set(contentViewController: resultsVC)
-        floatingPanel.track(scrollView: resultsVC?.tableView)
-        floatingPanel.addPanel(toParent: self)
-        view.addSubview(floatingPanel.view)
+        floatingResultsView.set(contentViewController: resultsVC)
+        floatingResultsView.track(scrollView: resultsVC?.tableView)
+        floatingResultsView.addPanel(toParent: self)
+        view.addSubview(floatingResultsView.view)
         loadNearbyLocations()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
-        floatingPanel.addPanel(toParent: self, animated: true)
+        // second time this is getting called, figure it out
+//        floatingResultsView.addPanel(toParent: self, animated: true)
         
     }
     
@@ -82,6 +83,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // whatever searchResults are showing should populate the mapView and ResultsTableView
         // dismiss searchController tableView
+
         dismiss(animated: true, completion: nil)
     }
 //    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -131,10 +133,10 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
 //                locationDetailsVC.phoneText = selectedItem.phoneNumber ?? "Phone number unavailable"
 //                locationDetailsVC.addressText = parseAddress(selectedItem: selectedItem.placemark)
 //                locationDetailsVC.locationSelected = selectedItem
-                floatingPanel = FloatingPanelController()
-                floatingPanel.set(contentViewController: locationDetailsVC)
-                floatingPanel.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
-                self.present(floatingPanel, animated: true, completion: nil)
+                floatingDetailsView = FloatingPanelController()
+                floatingDetailsView.set(contentViewController: locationDetailsVC)
+                floatingDetailsView.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
+                self.present(floatingDetailsView, animated: true, completion: nil)
                 break
             } else {
                 // item DOES NOT exist in DB...
@@ -163,22 +165,20 @@ extension ViewController: HandleMapSearch {
     }
     
     func loadDetailsView(placemark: MKPlacemark) {
-        if floatingPanel.isViewLoaded {
-            floatingPanel.dismiss(animated: true, completion: nil)
-        }
+        // something  is causing resultsVC to crash when dismissing the DetailsVC
+        
         // show new Floating Panel with details of the location
-        floatingPanel = FloatingPanelController()
+        floatingDetailsView = FloatingPanelController()
         var locationDetailsVC = LocationDetailsViewController()
         locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
-       
         
         let coordinate = placemark.coordinate
         let item = LocationObject(name: placemark.name ?? "", comment: [], address: parseAddress(selectedItem: placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
         
         locationDetailsVC.selectedLocation = item
-        floatingPanel.set(contentViewController: locationDetailsVC)
-        floatingPanel.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
-        self.present(floatingPanel, animated: true, completion: nil)
+        floatingDetailsView.set(contentViewController: locationDetailsVC)
+        floatingDetailsView.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
+        self.present(floatingDetailsView, animated: true, completion: nil)
 
     }
     

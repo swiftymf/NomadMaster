@@ -130,6 +130,10 @@
                                                     </tableViewCellContentView>
                                                 </tableViewCell>
                                             </prototypes>
+                                            <connections>
+                                                <outlet property="dataSource" destination="ozB-LB-99D" id="UJ7-yM-JWp"/>
+                                                <outlet property="delegate" destination="ozB-LB-99D" id="9q7-gS-PA0"/>
+                                            </connections>
                                         </tableView>
                                     </subviews>
                                 </view>
