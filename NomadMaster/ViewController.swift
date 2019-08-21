@@ -119,27 +119,12 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         })
     }
     
-    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        // PIN ISN'T CHANGING DETAILS. WHATEVER THE FIRST ONE SELECTED IT STAYS THAT ONE
-        
-        print("someone touched an annotation")
         let selectedAnnotation = view.annotation
         for item in items {
             // item DOES exists in DB...
             if selectedAnnotation?.coordinate.latitude == item.latitude && selectedAnnotation?.coordinate.longitude == item.longitude {
-                // pass info to detailsVC
-//                locationDetailsVC.selectedLocation = item
                 loadDetailsFromPin(locationObject: item)
-//                locationDetailsVC.nameText = selectedItem.name ?? "Name unavailable"
-//                locationDetailsVC.phoneText = selectedItem.phoneNumber ?? "Phone number unavailable"
-//                locationDetailsVC.addressText = parseAddress(selectedItem: selectedItem.placemark)
-//                locationDetailsVC.locationSelected = selectedItem
-//                floatingDetailsView = FloatingPanelController()
-//                floatingDetailsView.set(contentViewController: locationDetailsVC)
-//                floatingDetailsView.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
-//                self.present(floatingDetailsView, animated: true, completion: nil)
-            
                 break
             } else {
                 // item DOES NOT exist in DB...
@@ -160,6 +145,7 @@ extension ViewController: HandleMapSearch {
             let state = placemark.administrativeArea {
             annotation.subtitle = "\(city), \(state)"
         }
+        
         mapView.addAnnotation(annotation)
         //  Show DetailsVC and populate with info from placemark
         let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -170,7 +156,6 @@ extension ViewController: HandleMapSearch {
     func loadDetailsView(placemark: MKPlacemark) {        
         if locationDetailsVC.isViewLoaded {
             locationDetailsVC.dismiss(animated: true, completion: nil)
-            print("removed view")
         }
 
         let coordinate = placemark.coordinate
@@ -186,11 +171,10 @@ extension ViewController: HandleMapSearch {
     func loadDetailsFromPin(locationObject: LocationObject) {
         if locationDetailsVC.isViewLoaded {
             locationDetailsVC.dismiss(animated: true, completion: nil)
-            print("removed view")
         }
         
         let coordinate = CLLocationCoordinate2D(latitude: locationObject.latitude, longitude: locationObject.longitude)
-        let item = LocationObject(name: locationObject.name, commentDict: [], address: locationObject.address, longitude: coordinate.longitude, latitude: coordinate.latitude)
+        let item = LocationObject(name: locationObject.name, commentDict: locationObject.commentDict, address: locationObject.address, longitude: coordinate.longitude, latitude: coordinate.latitude)
         
         locationDetailsVC.selectedLocation = item
         floatingDetailsView.set(contentViewController: locationDetailsVC)

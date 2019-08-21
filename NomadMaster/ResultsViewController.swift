@@ -53,7 +53,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
 extension ResultsViewController {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     return 1//matchingItems.count
+     return matchingItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,9 +63,9 @@ extension ResultsViewController {
 //        cell.textLabel?.text = locationItem.name
 //        cell.detailTextLabel?.text = locationItem.address
         // This works for searching for locations
-     //   let selectedItem = matchingItems[indexPath.row].placemark
-        cell.textLabel?.text = "HI"//selectedItem.name
-        cell.detailTextLabel?.text = "hello"//parseAddress(selectedItem: selectedItem)
+        let selectedItem = matchingItems[indexPath.row].placemark
+        cell.textLabel?.text = selectedItem.name
+        cell.detailTextLabel?.text = parseAddress(selectedItem: selectedItem)
         return cell
     }
 
