@@ -14,7 +14,7 @@ struct LocationObject {
     let ref: DatabaseReference?
     let key: String
     var name: String
-    var comment: [[String: String]]  // Change to dictionary? [username: comment]
+    var commentDict: [[String: String]]  // Change to dictionary? [username: comment]
 //    var phoneNumber: String
     var address: String
     var longitude: Double
@@ -23,11 +23,11 @@ struct LocationObject {
     // TODO: - Add these properties
     //    let coordinates: CLLocationCoordinates?
     
-    init(name: String, comment: [[String: String]], key: String = "", address: String, longitude: Double, latitude: Double) {
+    init(name: String, commentDict: [[String: String]], key: String = "", address: String, longitude: Double, latitude: Double) {
         self.ref = nil
         self.key = key
         self.name = name
-        self.comment = comment
+        self.commentDict = commentDict
         self.address = address
         self.longitude = longitude
         self.latitude = latitude
@@ -37,7 +37,7 @@ struct LocationObject {
         guard
             let value = snapshot.value as? [String: AnyObject],
             let name = value["name"] as? String,
-            let comment = value["comment"] as? [[String: String]],
+            let commentDict = value["comment"] as? [[String: String]],
             let address = value["address"] as? String,
             let longitude = value["longitude"] as? Double,
             let latitude = value["latitude"] as? Double else {
@@ -47,7 +47,7 @@ struct LocationObject {
         self.ref = snapshot.ref
         self.key = snapshot.key
         self.name = name
-        self.comment = comment
+        self.commentDict = commentDict
         self.address = address
         self.longitude = longitude
         self.latitude = latitude
@@ -56,7 +56,7 @@ struct LocationObject {
     func toAnyObject() -> Any {
         return [
             "name": name,
-            "comment": comment,
+            "comment": commentDict,
             "address": address,
             "longitude": longitude,
             "latitude": latitude

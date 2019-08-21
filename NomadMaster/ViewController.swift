@@ -16,7 +16,7 @@ protocol HandleMapSearch {
     func loadDetailsView(placemark: MKPlacemark)
 }
 
-class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearchBarDelegate, MKMapViewDelegate {
     
     var ref: DatabaseReference!
     var locationManager = CLLocationManager()
@@ -55,11 +55,12 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         
         locationSearchTable.mapView = mapView
         locationSearchTable.handleMapSearchDelegate = self
+        mapView.delegate = self
         
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "ResultsViewController") as? ResultsViewController
-        locationDetailsVC = storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController
+        floatingDetailsView = FloatingPanelController()
+        locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
 
-        
         ref = Database.database().reference(withPath: "userFeedback")
         floatingResultsView = FloatingPanelController()
         floatingResultsView.delegate = self
@@ -95,8 +96,6 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
 //    
 //    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
 //        searchBar.showsCancelButton = true
-//        resultsVC.tableView.alpha = 1.0
-//        resultsVC.fpc.dismiss(animated: true, completion: nil)
 //    }
     
     func loadNearbyLocations() {
@@ -118,6 +117,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         })
     }
     
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         // PIN ISN'T CHANGING DETAILS. WHATEVER THE FIRST ONE SELECTED IT STAYS THAT ONE
         
@@ -137,6 +137,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
                 floatingDetailsView.set(contentViewController: locationDetailsVC)
                 floatingDetailsView.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
                 self.present(floatingDetailsView, animated: true, completion: nil)
+            
                 break
             } else {
                 // item DOES NOT exist in DB...
@@ -164,16 +165,14 @@ extension ViewController: HandleMapSearch {
         mapView.setRegion(region, animated: true)
     }
     
-    func loadDetailsView(placemark: MKPlacemark) {
-        // something  is causing resultsVC to crash when dismissing the DetailsVC
-        
-        // show new Floating Panel with details of the location
-        floatingDetailsView = FloatingPanelController()
-        var locationDetailsVC = LocationDetailsViewController()
-        locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
-        
+    func loadDetailsView(placemark: MKPlacemark) {        
+        if locationDetailsVC.isViewLoaded {
+            locationDetailsVC.dismiss(animated: true, completion: nil)
+            print("removed view")
+        }
+
         let coordinate = placemark.coordinate
-        let item = LocationObject(name: placemark.name ?? "", comment: [], address: parseAddress(selectedItem: placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
+        let item = LocationObject(name: placemark.name ?? "", commentDict: [], address: parseAddress(selectedItem: placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
         
         locationDetailsVC.selectedLocation = item
         floatingDetailsView.set(contentViewController: locationDetailsVC)
