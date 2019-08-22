@@ -135,11 +135,9 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
             annotationView?.annotation = annotation
         }
         
-        //Set annotation-specific properties **AFTER**
-        //the view is dequeued or created...
-        
         let cpa = annotation as! CustomPointAnnotation
         annotationView?.image = UIImage(named:cpa.imageName)
+        annotationView?.frame.size = CGSize(width: 50, height: 50)
         
         return annotationView
     }
