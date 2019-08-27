@@ -27,27 +27,7 @@ class ResultsViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         
         ref = Database.database().reference()
-//        tableView.delegate = self
-//        tableView.dataSource = self
     }
-    
-    func parseAddress(selectedItem:MKPlacemark) -> String {
-        let firstSpace = (selectedItem.subThoroughfare != nil && selectedItem.thoroughfare != nil) ? " " : ""
-        let comma = (selectedItem.subThoroughfare != nil || selectedItem.thoroughfare != nil) && (selectedItem.subAdministrativeArea != nil || selectedItem.administrativeArea != nil) ? ", " : ""
-        let secondSpace = (selectedItem.subAdministrativeArea != nil && selectedItem.administrativeArea != nil) ? " " : ""
-        let addressLine = String(
-            format:"%@%@%@%@%@%@%@",
-            selectedItem.subThoroughfare ?? "",
-            firstSpace,
-            selectedItem.thoroughfare ?? "",
-            comma,
-            selectedItem.locality ?? "",
-            secondSpace,
-            selectedItem.administrativeArea ?? ""
-        )
-        return addressLine
-    }
-    
 }
 
 extension ResultsViewController {
@@ -59,16 +39,11 @@ extension ResultsViewController {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-//        let locationItem = items[indexPath.row]
-//        cell.textLabel?.text = locationItem.name
-//        cell.detailTextLabel?.text = locationItem.address
-        // This works for searching for locations
         let selectedItem = items[indexPath.row]
         cell.textLabel?.text = selectedItem.name
         cell.detailTextLabel?.text = selectedItem.address
         return cell
     }
-
     
     // TODO: - Show pin for location selected
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

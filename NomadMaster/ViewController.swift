@@ -22,7 +22,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
     
     var ref: DatabaseReference!
     var locationManager = CLLocationManager()
-
+    
     var floatingResultsView: FloatingPanelController!
     var floatingDetailsView: FloatingPanelController!
     var resultsVC: ResultsViewController!
@@ -63,7 +63,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         resultsVC = storyboard?.instantiateViewController(withIdentifier: "ResultsViewController") as? ResultsViewController
         floatingDetailsView = FloatingPanelController()
         locationDetailsVC = (storyboard?.instantiateViewController(withIdentifier: "LocationDetailsViewController") as? LocationDetailsViewController)!
-
+        
         ref = Database.database().reference(withPath: "userFeedback")
         floatingResultsView = FloatingPanelController()
         floatingResultsView.delegate = self
@@ -75,8 +75,11 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         loadNearbyLocations()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    @IBAction func centerOnUserButton(_ sender: UIButton) {
+        guard let userLocationCoordinates: CLLocation = locationManager.location else { return }
+        let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        let region = MKCoordinateRegion(center: userLocationCoordinates.coordinate, span: span)
+        mapView.setRegion(region, animated: true)
     }
     
     // MARK: UISearchBarDelegate
@@ -84,19 +87,19 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // whatever searchResults are showing should populate the mapView and ResultsTableView
         // dismiss searchController tableView
-
+        
         dismiss(animated: true, completion: nil)
     }
-//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        searchBar.resignFirstResponder()
-//        searchBar.showsCancelButton = false
-//        resultsVC.matchingItems.removeAll()
-//        resultsVC.tableView.reloadData()
-//    }
-//    
-//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        searchBar.showsCancelButton = true
-//    }
+    //    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    //        searchBar.resignFirstResponder()
+    //        searchBar.showsCancelButton = false
+    //        resultsVC.matchingItems.removeAll()
+    //        resultsVC.tableView.reloadData()
+    //    }
+    //
+    //    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    //        searchBar.showsCancelButton = true
+    //    }
     
     func loadNearbyLocations() {
         
@@ -113,20 +116,24 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
                     self.mapView.addAnnotation(annotation)
                 }
             }
-            // pass this array into ResultsVC to populate tableview
             self.items = newItems
             self.sortLocationNearestToUser()
-            
         })
     }
     
     func sortLocationNearestToUser() {
+        // Update to only save locations within current map region
+        // if zoomed in, zoom map out to some level
+        // see if location is within map region and then sort my distance to user
+        // this needs to happen for the pin annotations too
+        
+        //        if mapView.contains(coordinate: CLLocationCoordinate2D) { add to array for sorting by distance }
+        
         let sortedPlaces = items.sorted {
             userLocation.distance(from: $0.location) < userLocation.distance(from: $1.location)
         }
         resultsVC.items = sortedPlaces
         resultsVC.tableView.reloadData()
-        print("sorted: \(sortedPlaces)")
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -164,6 +171,12 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
             }
         }
     }
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        if mapView.contains(coordinate: mapView.centerCoordinate) {
+            // do stuff
+        }
+    }
 }
 
 extension ViewController: HandleMapSearch {
@@ -191,7 +204,7 @@ extension ViewController: HandleMapSearch {
         if locationDetailsVC.isViewLoaded {
             locationDetailsVC.dismiss(animated: true, completion: nil)
         }
-
+        
         let coordinate = placemark.coordinate
         let item = LocationObject(name: placemark.name ?? "", commentDict: [], address: parseAddress(selectedItem: placemark), longitude: coordinate.longitude, latitude: coordinate.latitude)
         
@@ -199,7 +212,7 @@ extension ViewController: HandleMapSearch {
         floatingDetailsView.set(contentViewController: locationDetailsVC)
         floatingDetailsView.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
         self.present(floatingDetailsView, animated: true, completion: nil)
-
+        
     }
     
     func loadDetailsFromPin(locationObject: LocationObject) {
@@ -214,7 +227,7 @@ extension ViewController: HandleMapSearch {
         floatingDetailsView.set(contentViewController: locationDetailsVC)
         floatingDetailsView.isRemovalInteractionEnabled = true // Optional: Let it removable by a swipe-down
         self.present(floatingDetailsView, animated: true, completion: nil)
-
+        
     }
     
     func parseAddress(selectedItem:MKPlacemark) -> String {
@@ -248,7 +261,7 @@ extension ViewController: CLLocationManagerDelegate {
             locationManager.requestLocation()
         }
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -263,4 +276,12 @@ extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("error:: (error)")
     }
+}
+
+extension MKMapView {
+    
+    func contains(coordinate: CLLocationCoordinate2D) -> Bool {
+        return self.visibleMapRect.contains(MKMapPoint(coordinate))
+    }
+    
 }

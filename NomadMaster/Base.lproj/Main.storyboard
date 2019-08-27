@@ -21,17 +21,28 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gnm-pK-uFw">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </mapView>
+                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c12-Rx-PVg">
+                                <rect key="frame" x="371" y="100" width="27" height="27"/>
+                                <state key="normal" image="orientation"/>
+                                <connections>
+                                    <action selector="centerOnUserButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pnz-4u-r23"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Gnm-pK-uFw" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Mhy-se-aK2"/>
                             <constraint firstItem="Gnm-pK-uFw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P93-qq-kG0"/>
+                            <constraint firstItem="c12-Rx-PVg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="12" id="R3C-wG-nkN"/>
                             <constraint firstItem="Gnm-pK-uFw" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="gfq-NC-04h"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="c12-Rx-PVg" secondAttribute="trailing" constant="16" id="kH4-vA-GFw"/>
                             <constraint firstAttribute="bottom" secondItem="Gnm-pK-uFw" secondAttribute="bottom" id="kJy-Qy-jCh"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="8I4-ix-JCB"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mapView" destination="Gnm-pK-uFw" id="cne-In-v8D"/>
                     </connections>
@@ -300,4 +311,7 @@
             <point key="canvasLocation" x="3649.275362318841" y="-538.39285714285711"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="orientation" width="27" height="27"/>
+    </resources>
 </document>
