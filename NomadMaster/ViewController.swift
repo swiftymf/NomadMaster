@@ -31,6 +31,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
     var matchingItems:[MKMapItem] = []
     var items: [LocationObject] = []
     var resultSearchController: UISearchController? = nil
+    var userLocation = CLLocation()
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -76,9 +77,6 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        // second time this is getting called, figure it out
-//        floatingResultsView.addPanel(toParent: self, animated: true)
-        
     }
     
     // MARK: UISearchBarDelegate
@@ -115,8 +113,20 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
                     self.mapView.addAnnotation(annotation)
                 }
             }
+            // pass this array into ResultsVC to populate tableview
             self.items = newItems
+            self.sortLocationNearestToUser()
+            
         })
+    }
+    
+    func sortLocationNearestToUser() {
+        let sortedPlaces = items.sorted {
+            userLocation.distance(from: $0.location) < userLocation.distance(from: $1.location)
+        }
+        resultsVC.items = sortedPlaces
+        resultsVC.tableView.reloadData()
+        print("sorted: \(sortedPlaces)")
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -243,9 +253,11 @@ extension ViewController: CLLocationManagerDelegate {
         if let location = locations.first {
             let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
             let region = MKCoordinateRegion(center: location.coordinate, span: span)
-//            let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 500, longitudinalMeters: 500)
             mapView.setRegion(region, animated: true)
-            locationManager.stopUpdatingLocation()        }
+            locationManager.stopUpdatingLocation()
+            guard let userLocationCoordinates: CLLocation = manager.location else { return }
+            userLocation = userLocationCoordinates
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

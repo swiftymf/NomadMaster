@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import MapKit
 
 struct LocationObject {
     
@@ -64,3 +65,8 @@ struct LocationObject {
     }
 }
 
+extension LocationObject {
+    var location: CLLocation {
+        return CLLocation(latitude: self.latitude, longitude: self.longitude)
+    }
+}
