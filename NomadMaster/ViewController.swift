@@ -128,10 +128,21 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         // this needs to happen for the pin annotations too
         
         //        if mapView.contains(coordinate: CLLocationCoordinate2D) { add to array for sorting by distance }
+        var itemsInMapRegion: [LocationObject] = []
         
-        let sortedPlaces = items.sorted {
+        for item in items {
+            let location = CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude)
+            if mapView.contains(coordinate: location) {
+                itemsInMapRegion.append(item)
+            }
+        }
+        
+        
+//        let sortedPlaces = items.sorted {
+        let sortedPlaces = itemsInMapRegion.sorted {
             userLocation.distance(from: $0.location) < userLocation.distance(from: $1.location)
         }
+        print("itemsIn: \(itemsInMapRegion)")
         resultsVC.items = sortedPlaces
         resultsVC.tableView.reloadData()
     }
@@ -154,7 +165,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
         
         let cpa = annotation as! CustomPointAnnotation
         annotationView?.image = UIImage(named:cpa.imageName)
-        annotationView?.frame.size = CGSize(width: 50, height: 50)
+        annotationView?.frame.size = CGSize(width: 40, height: 40)
         
         return annotationView
     }
@@ -182,7 +193,7 @@ class ViewController: UIViewController, FloatingPanelControllerDelegate, UISearc
 extension ViewController: HandleMapSearch {
     func dropPinZoomIn(placemark: MKPlacemark) {
         selectedPin = placemark
-        mapView.removeAnnotations(mapView.annotations)
+        //mapView.removeAnnotations(mapView.annotations)
         
         let annotation = CustomPointAnnotation()//MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
@@ -194,6 +205,7 @@ extension ViewController: HandleMapSearch {
         }
         
         mapView.addAnnotation(annotation)
+        mapView.selectAnnotation(annotation, animated: true)
         //  Show DetailsVC and populate with info from placemark
         let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
         let region = MKCoordinateRegion(center: placemark.coordinate, span: span)
